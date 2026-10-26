@@ -1,0 +1,106 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Test Your Students</title>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ff;--card:#fff;--ink:#1b1740;--mute:#6a6790;--pri:#5b3df5;--hi:#ffc53d;--ok:#0f9d6e;--bad:#dc3f4a;--line:#dcd8f5;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13112b;--card:#1d1a3d;--ink:#efedff;--mute:#a09dc8;--pri:#8b76ff;--line:#34305f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#13112b;--card:#1d1a3d;--ink:#efedff;--mute:#a09dc8;--pri:#8b76ff;--line:#34305f;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 'Readex Pro',Tahoma,system-ui,sans-serif}
+.w{max-width:720px;margin:auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+h1{font-size:22px;margin:0}h2{font-size:20px;margin:8px 0 12px}h3{font-size:16px;margin:20px 0 8px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+input,textarea{width:100%;font:inherit;color:inherit;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:4px 0}
+textarea{min-height:70px;resize:vertical}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:8px 14px}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--hi)}
+.b{background:var(--pri);color:#fff;border-color:var(--pri);font-weight:600}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tps{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.tp{text-align:center;padding:14px 6px;font-weight:600}.tp span{display:block;font-size:34px;line-height:1.2}
+.tp.on{border:2px solid var(--pri);background:var(--hi);color:#1b1740}
+.opt{display:flex;gap:8px;align-items:center}.opt input[type=radio]{width:auto;accent-color:var(--pri)}
+.a{display:block;width:100%;text-align:start;margin:6px 0}
+.ok{background:var(--ok)!important;color:#fff!important}.no{background:var(--bad)!important;color:#fff!important}.sel{outline:3px solid var(--hi)}
+.fl{min-height:160px;text-align:center;cursor:pointer}small{color:var(--mute)}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}.m{min-height:64px;display:flex;align-items:center;justify-content:center;text-align:center}
+.bar{height:6px;background:var(--hi);border-radius:3px;transition:width 1s linear}
+.okb{border-color:var(--ok)}.nob{border-color:var(--bad)}progress{width:60%;accent-color:var(--pri)}@keyframes sp{to{transform:rotate(720deg)}}</style></head><body><div class="w" id="app"></div>
+<script>
+const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),$=s=>document.querySelector(s);
+const sh=a=>a.map(x=>[Math.random(),x]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);
+const L={ar:{name:'عنوان الاختبار',tpl:'اختر القالب (60 قالب = 10 ألعاب × 6 أشكال)',qs:'الأسئلة',k0:'اختيار من متعدد',k1:'صح أو خطأ',k2:'مقالي',q:'اكتب السؤال',o:'خيار',m:'الإجابة النموذجية',t:'صح',f:'خطأ',del:'حذف',share:'إنشاء رابط المشاركة',copy:'نسخ',done:'تم النسخ',try:'تجربة',back:'رجوع للتعديل',next:'التالي',prev:'السابق',show:'اظهر الإجابة',ok:'أجبت صح',no:'أجبت خطأ',score:'النتيجة',again:'إعادة',flip:'اضغط لقلب البطاقة',write:'اكتب إجابتك هنا',note:'شارك الرابط مع طلابك. يفتح مباشرة بدون تسجيل دخول.',need:'أضف سؤالًا واحدًا على الأقل',need2:'هذا القالب يحتاج سؤالين على الأقل',add:'إضافة سؤال',moves:'محاولات',tm:'انتهى الوقت',lang:'English',skip:'تخطي السؤال',mark:'اعتبرها صحيحة ✓',submit:'تسليم وتصحيح',kw:'كلمات مفتاحية للتصحيح، افصل بينها بفاصلة (اختياري)',host:'الرابط ده شغال على جهازك بس. ارفع الملف على استضافة مجانية (Netlify Drop أو GitHub Pages) عشان يشتغل عند أي حد.',pct:'تطابق',tp:['اختبار','سباق الوقت','بطاقات','توصيل','ذاكرة']},
+en:{name:'Quiz title',tpl:'Choose a template (60 = 10 games × 6 looks)',qs:'Questions',k0:'Multiple choice',k1:'True / False',k2:'Essay',q:'Type the question',o:'Option',m:'Model answer',t:'True',f:'False',del:'Delete',share:'Create share link',copy:'Copy',done:'Copied',try:'Try it',back:'Back to editing',next:'Next',prev:'Previous',show:'Show answer',ok:'I got it right',no:'I got it wrong',score:'Score',again:'Play again',flip:'Tap the card to flip',write:'Write your answer here',note:'Share this link with your students. It opens instantly, no login.',need:'Add at least one question',need2:'This template needs at least 2 questions',add:'Add question',moves:'Moves',tm:'Time is up',lang:'العربية',skip:'Skip question',mark:'Mark as correct ✓',submit:'Submit',kw:'Grading keywords, comma separated (optional)',host:'This link only works on your device. Upload the file to free hosting (Netlify Drop or GitHub Pages) so it works for everyone.',pct:'match',tp:['Quiz','Time race','Flashcards','Matching','Memory']}};
+const TP=[['quiz','📝','اختبار','Quiz'],['timed','⏱️','سباق الوقت','Time race'],['light','⚡','البرق','Lightning'],['surv','❤️','البقاء','Survival'],['race','🏎️','سباق سيارات','Car race'],['wheel','🎡','عجلة الحظ','Wheel'],['exam','📄','امتحان','Exam'],['flash','🃏','بطاقات','Cards'],['match','🔗','توصيل','Matching'],['mem','🧠','ذاكرة','Memory']];
+const SK=[['c','🎓','#5b3df5','#ffc53d','كلاسيك','Classic'],['o','🌊','#0a7ea4','#7be0ff','محيط','Ocean'],['j','🌴','#1f8a4c','#ffd166','غابة','Jungle'],['s','🚀','#3b3fd1','#ff8fab','فضاء','Space'],['k','🍭','#d6336c','#ffe066','حلوى','Candy'],['d','🏜️','#b5651d','#ffd8a8','صحراء','Desert']];
+const MX={quiz:{},timed:{tm:20},light:{tm:8},surv:{lives:3},race:{race:1},wheel:{wheel:1}};
+function applySk(i){const k=SK[i||0],r=document.documentElement.style;r.setProperty('--pri',k[2]);r.setProperty('--hi',k[3])}
+let lang='ar',S={t:'',p:'quiz',s:0,q:[[0,'',['','','',''],0,'']]},play=false,shared=false;
+try{lang=localStorage.getItem('tys-l')||'ar';const d=localStorage.getItem('tys-d');if(d)S=JSON.parse(d)}catch(e){}
+const T=k=>L[lang][k],sv=()=>{try{localStorage.setItem('tys-d',JSON.stringify(S))}catch(e){}};
+const ans=q=>q[0]==0?q[2][q[3]]:q[0]==1?(q[3]?T('f'):T('t')):q[4];
+function dir(){document.documentElement.lang=lang;document.documentElement.dir=lang=='ar'?'rtl':'ltr'}
+function b64(u){let s='';for(let i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function unb64(s){s=s.replace(/-/g,'+').replace(/_/g,'/');const r=atob(s+'==='.slice((s.length+3)%4));return Uint8Array.from(r,c=>c.charCodeAt(0))}
+async function enc(o){const b=new TextEncoder().encode(JSON.stringify(o));try{const r=new Blob([b]).stream().pipeThrough(new CompressionStream('deflate-raw'));return 'z'+b64(new Uint8Array(await new Response(r).arrayBuffer()))}catch(e){return 'r'+b64(b)}}
+async function dec(t){let u=unb64(t.slice(1));if(t[0]=='z'){u=new Uint8Array(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer())}return JSON.parse(new TextDecoder().decode(u))}
+const valid=()=>S.q.filter(q=>q[1].trim()&&(q[0]!=0||q[2][q[3]]?.trim())&&(q[0]!=2||q[4].trim()));
+/* ---------- creator ---------- */
+function R(){dir();applySk(S.s);let h=`<header><h1>🎓 Test Your Students <small>v3</small></h1><button onclick="lang=lang=='ar'?'en':'ar';try{localStorage.setItem('tys-l',lang)}catch(e){};R()">${T('lang')}</button></header>
+<input placeholder="${T('name')}" value="${E(S.t)}" oninput="S.t=this.value;sv()">
+<h3>${T('tpl')}</h3><div class="tps">${TP.map(t=>`<button class="tp ${S.p==t[0]?'on':''}" onclick="S.p='${t[0]}';sv();R()"><span>${t[1]}</span>${t[lang=='ar'?2:3]}</button>`).join('')}</div><div class="row">${SK.map((k,i)=>`<button class="${(S.s||0)==i?'b':''}" onclick="S.s=${i};sv();R()">${k[1]} ${k[lang=='ar'?4:5]}</button>`).join('')}</div>
+<h3>${T('qs')}</h3>`;
+S.q.forEach((q,i)=>{h+=`<div class="c"><div class="row">${[0,1,2].map(k=>`<button class="${q[0]==k?'b':''}" onclick="kind(${i},${k})">${T('k'+k)}</button>`).join('')}<button onclick="S.q.splice(${i},1);sv();R()" style="margin-inline-start:auto">${T('del')}</button></div>
+<textarea placeholder="${T('q')}" oninput="S.q[${i}][1]=this.value;sv()">${E(q[1])}</textarea>`;
+if(q[0]==0)q[2].forEach((o,j)=>{h+=`<div class="opt"><input type="radio" name="r${i}" ${q[3]==j?'checked':''} onchange="S.q[${i}][3]=${j};sv()"><input placeholder="${T('o')} ${j+1}" value="${E(o)}" oninput="S.q[${i}][2][${j}]=this.value;sv()"></div>`});
+if(q[0]==1)h+=`<div class="opt"><label><input type="radio" name="r${i}" ${q[3]==0?'checked':''} onchange="S.q[${i}][3]=0;sv()"> ${T('t')}</label>&nbsp;<label><input type="radio" name="r${i}" ${q[3]==1?'checked':''} onchange="S.q[${i}][3]=1;sv()"> ${T('f')}</label></div>`;
+if(q[0]==2)h+=`<textarea placeholder="${T('m')}" oninput="S.q[${i}][4]=this.value;sv()">${E(q[4])}</textarea><input placeholder="${T('kw')}" value="${E(q[5]||'')}" oninput="S.q[${i}][5]=this.value;sv()">`;
+h+='</div>'});
+h+=`<div class="row"><button onclick="S.q.push([0,'',['','','',''],0,'']);sv();R()">＋ ${T('add')}</button></div>
+<div class="row"><button class="b" onclick="tryIt()">▶ ${T('try')}</button><button class="b" onclick="doShare()">🔗 ${T('share')}</button></div><div id="sh"></div>`;
+$('#app').innerHTML=h}
+function kind(i,k){const q=S.q[i];q[0]=k;q[3]=0;sv();R()}
+async function doShare(){const v=valid();if(!v.length){$('#sh').innerHTML=`<p class="no c">${T('need')}</p>`;return}
+const l=location.origin+location.pathname+'#'+await enc({t:S.t,p:S.p,s:S.s,q:v});
+$('#sh').innerHTML=`<div class="c"><small>${T('note')}${location.protocol=='file:'?'<br>'+T('host'):''}</small><input id="lk" readonly value="${E(l)}" onfocus="this.select()"><button class="b" onclick="cp()">${T('copy')}</button></div>`}
+async function cp(){const i=$('#lk');i.select();try{await navigator.clipboard.writeText(i.value)}catch(e){try{document.execCommand('copy')}catch(x){}}$('#sh button').textContent=T('done')}
+function tryIt(){const v=valid();if(!v.length){$('#sh').innerHTML=`<p class="no c">${T('need')}</p>`;return}start({t:S.t,p:S.p,s:S.s,q:v},false)}
+/* ---------- player ---------- */
+function start(D,sh_){shared=sh_;dir();applySk(D.s);const n=D.q.length,two=['match','mem'].includes(D.p)&&n<2;
+$('#app').innerHTML=`<header><h1>${E(D.t||'Test Your Students')}</h1>${shared?`<button onclick="lang=lang=='ar'?'en':'ar';dir();start(D,true)">${T('lang')}</button>`:`<button onclick="R()">${T('back')}</button>`}</header><div id="pl"></div>`;
+if(two){$('#pl').innerHTML=`<p class="c no">${T('need2')}</p>`;return}
+const f={flash,match,mem,exam};f[D.p]?f[D.p](D):quiz(D,MX[D.p]||{})}
+function end(D,sc,n){$('#pl').innerHTML=`<div class="c" style="text-align:center"><h2>${T('score')}</h2><div style="font-size:48px;font-weight:700">${sc}/${n}</div><button class="b" onclick="start(D0,shared)">${T('again')}</button></div>`}
+let D0;
+function nrm(s){return String(s).toLowerCase().replace(/[\u064B-\u0652\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه')}
+function grade(q,t){t=nrm(t);let k=(q[5]||'').split(/[,،]/).map(x=>nrm(x).trim()).filter(Boolean);if(!k.length)k=[...new Set(nrm(q[4]).split(/[\s.,،:؛!؟?()]+/).filter(w=>w.length>3))];if(!k.length)return t.trim()==nrm(q[4]).trim()?1:0;return k.filter(w=>t.includes(w)).length/k.length}
+function quiz(D,o){D0=D;const Q=sh(D.q),n=Q.length;let i=0,sc=0,lv=o.lives||0,bot=0,sp=-1,tmr,t;
+const nx=()=>{i++;go()};
+const go=()=>{clearInterval(tmr);if(i>=n||(o.lives&&lv<=0)){end(D,sc,n);if(o.race)$('#pl .c').insertAdjacentHTML('afterbegin',`<h2>${sc>=bot?'🏆':'🤖'}</h2>`);return}
+if(o.wheel&&sp!=i){sp=i;$('#pl').innerHTML='<div class="c" style="text-align:center;font-size:64px"><span style="display:inline-block;animation:sp 1s">🎡</span></div>';return setTimeout(go,1000)}
+const q=Q[i],k=q[0];
+let h=`<div class="c"><small>${i+1}/${n} ${'❤️'.repeat(lv)}</small>${o.race?`<div>🏎️ <progress value="${sc}" max="${n}"></progress></div><div>🤖 <progress value="${bot}" max="${n}"></progress></div>`:''}${o.tm&&k!=2?'<div class="bar" id="br" style="width:100%"></div>':''}<h2>${E(q[1])}</h2>`;
+if(k==2)h+=`<textarea id="ta" placeholder="${T('write')}"></textarea><div class="row"><button class="b" id="sa">${T('submit')}</button><button id="sk">${T('skip')}</button></div>`;
+else(k?[T('t'),T('f')]:q[2]).forEach((x,j)=>{if(x.trim())h+=`<button class="a" data-j="${j}">${E(x)}</button>`});
+$('#pl').innerHTML=h+'<div id="fb"></div></div>';
+const fin=c=>{clearInterval(tmr);sc+=c;if(!c&&o.lives)lv--;if(o.race&&Math.random()<.55)bot++;$('#fb').insertAdjacentHTML('beforeend',`<button class="b" id="nx">${T('next')}</button>`);$('#nx').onclick=nx};
+if(k==2){$('#sk').onclick=nx;$('#sa').onclick=()=>{const p=grade(q,$('#ta').value),c=p>=.6?1:0;$('#sa').parentNode.remove();$('#fb').innerHTML=`<p class="c ${c?'okb':'nob'}">${Math.round(p*100)}% ${T('pct')}<br>${E(q[4])}</p>`+(c?'':`<button class="ok" id="ov">${T('mark')}</button> `);fin(c);const ov=$('#ov');if(ov)ov.onclick=()=>{sc++;if(o.lives&&lv<o.lives)lv++;ov.remove()}}}
+else{const pick=j=>{document.querySelectorAll('.a').forEach(b=>{const x=+b.dataset.j;b.disabled=true;if(x==q[3])b.classList.add('ok');else if(x==j)b.classList.add('no')});fin(j==q[3]?1:0)};
+document.querySelectorAll('.a').forEach(b=>b.onclick=()=>pick(+b.dataset.j));
+if(o.tm){t=o.tm;tmr=setInterval(()=>{t--;$('#br').style.width=t*100/o.tm+'%';if(t<=0)pick(-1)},1000)}}};
+go()}
+function exam(D){D0=D;const Q=D.q;$('#pl').innerHTML=Q.map((q,i)=>`<div class="c" id="x${i}"><b>${i+1}. ${E(q[1])}</b>`+(q[0]==2?`<textarea id="e${i}" placeholder="${T('write')}"></textarea>`:(q[0]?[T('t'),T('f')]:q[2]).map((o,j)=>o.trim()?`<label class="a"><input type="radio" name="x${i}" value="${j}"> ${E(o)}</label>`:'').join(''))+'<div class="fx"></div></div>').join('')+`<button class="b" id="sb">${T('submit')}</button><div id="fb"></div>`;
+$('#sb').onclick=()=>{let sc=0;Q.forEach((q,i)=>{let p=0;if(q[0]==2)p=grade(q,$('#e'+i).value);else{const r=document.querySelector(`input[name=x${i}]:checked`);p=r&&+r.value==q[3]?1:0}const ok=p>=.6;sc+=ok;const c=$('#x'+i);c.classList.add(ok?'okb':'nob');c.querySelector('.fx').innerHTML=`<small>${ok?'✓':'✗'} ${q[0]==2?Math.round(p*100)+'% — ':''}${E(ans(q))}</small>${q[0]==2&&!ok?`<br><button class="ok" data-i="${i}">${T('mark')}</button>`:''}`});$('#sb').remove();$('#fb').innerHTML=`<div class="c" style="text-align:center"><h2>${T('score')}</h2><div id="scv" style="font-size:48px;font-weight:700">${sc}/${Q.length}</div><button class="b" onclick="start(D0,shared)">${T('again')}</button></div>`;document.querySelectorAll('.fx [data-i]').forEach(b=>b.onclick=()=>{sc++;$('#scv').textContent=sc+'/'+Q.length;$('#x'+b.dataset.i).classList.replace('nob','okb');b.remove()})}}
+function flash(D){D0=D;let i=0,f=0;const n=D.q.length;const d=()=>{$('#pl').innerHTML=`<div class="c fl" id="fc"><small>${i+1}/${n}</small><h2>${E(f?ans(D.q[i]):D.q[i][1])}</h2><small>${T('flip')}</small></div><div class="row"><button id="pv">${T('prev')}</button><button class="b" id="nx">${T('next')}</button></div>`;
+$('#fc').onclick=()=>{f=!f;d()};$('#pv').onclick=()=>{i=(i-1+n)%n;f=0;d()};$('#nx').onclick=()=>{i=(i+1)%n;f=0;d()}};d()}
+function match(D){D0=D;const Q=D.q.slice(0,6),R2=sh(Q.map((q,i)=>[i,ans(q).slice(0,50)]));let a=null,done=0;
+$('#pl').innerHTML=`<div class="g"><div>${Q.map((q,i)=>`<button class="a m" data-l="${i}">${E(q[1].slice(0,60))}</button>`).join('')}</div><div>${R2.map(r=>`<button class="a m" data-r="${r[0]}">${E(r[1])}</button>`).join('')}</div></div><div id="fb"></div>`;
+document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));a=b;b.classList.add('sel')});
+document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{if(!a)return;if(a.dataset.l==b.dataset.r){a.classList.add('ok');b.classList.add('ok');a.disabled=b.disabled=true;a.classList.remove('sel');a=null;if(++done==Q.length)$('#fb').innerHTML=`<button class="b" onclick="start(D0,shared)">${T('again')}</button>`}else{b.classList.add('no');setTimeout(()=>b.classList.remove('no'),500)}})}
+function mem(D){D0=D;const Q=D.q.slice(0,6);const C=sh(Q.flatMap((q,i)=>[[i,q[1].slice(0,40)],[i,ans(q).slice(0,40)]]));let o=[],mv=0,done=0;
+$('#pl').innerHTML=`<small id="mv">${T('moves')}: 0</small><div class="g" style="grid-template-columns:1fr 1fr 1fr">${C.map((c,j)=>`<button class="m" data-j="${j}">❓</button>`).join('')}</div><div id="fb"></div>`;
+document.querySelectorAll('.m').forEach(b=>b.onclick=()=>{if(o.length>1||b.disabled||o.includes(b))return;const c=C[+b.dataset.j];b.textContent=c[1];o.push(b);if(o.length==2){mv++;$('#mv').textContent=T('moves')+': '+mv;const[x,y]=o;if(C[+x.dataset.j][0]==C[+y.dataset.j][0]){x.classList.add('ok');y.classList.add('ok');x.disabled=y.disabled=true;o=[];if(++done==Q.length)$('#fb').innerHTML=`<button class="b" onclick="start(D0,shared)">${T('again')}</button>`}else setTimeout(()=>{x.textContent=y.textContent='❓';o=[]},900)}})}
+/* ---------- boot ---------- */
+async function boot(){const t=location.hash.slice(1);if(t.length>2){try{start(await dec(t),true);return}catch(e){}}R()}
+addEventListener('hashchange',boot);boot();
+</script></body></html>
